@@ -163,12 +163,11 @@ int main (void) {
 	}
 	printf("Right Answer");
 	*/
-
+	
+	/*
 	int number, i, count, sum = 0;
 	printf("Enter numbers count: ");
 	scanf("%d", &count);
-	/* adsadf */
-	// scfsafd
 	for (i=0; i<count; i++){
 		printf("Enter number %d: ", i+1);
 		scanf("%d", &number);
@@ -176,5 +175,20 @@ int main (void) {
 	}
 	printf("Sum = %d\n", sum);
 	printf("Avg = %.2f\n", (float)sum/count);
-
+	*/
+	
+	int x;
+	for (;;)
+	{
+		printf("Please enter a number: ");
+		scanf("%d", &x);
+		if (x < 0) {
+			break;
+		}
+		else if (x == 0) {
+			continue;
+		}
+		printf("You entered %d\n", x);
+	}
+	
 }
