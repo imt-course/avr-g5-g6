@@ -15,7 +15,7 @@
 static void Lcd_SendData (u8 data);
 static void Lcd_SendCommand (u8 command);
 
-void Lcd_Init(void)
+void Lcd_Init(const Lcd_ControlType* config)
 {
     /* Set LCD Pins to Output */
     Dio_SetPinMode(LCD_PIN_RS, DIO_MODE_OUTPUT);
@@ -29,10 +29,7 @@ void Lcd_Init(void)
     Dio_SetPinMode(LCD_PIN_D5, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_D6, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_D7, DIO_MODE_OUTPUT);
-    /* Function Set (N=1: 2 Lines, F=0: 5x7) (0 0 1 1 N F X X) */
-    Lcd_SendCommand(0b00111000);
-    /* Display Control (D=1: Display ON, C=1: Cursor ON, B=1, Cursor Blinks) (0 0 0 0 1 D C B) */
-    Lcd_SendCommand(0b00001111);
+    Lcd_ControlDisplay(config);
     /* Display Clear */
     Lcd_SendCommand(0b00000001);
 }
@@ -80,6 +77,42 @@ void Lcd_ClearDisplay (void)
 {
     Lcd_SendCommand(0b00000001);
 }
+
+void Lcd_ControlDisplay(const Lcd_ControlType* control)
+{
+
+    u8 command;
+    /* Function Set (0 0 1 1 N F X X) */
+    command = 0b00110000;
+    if (control->lines == LCD_LINES_2)
+    {
+        SET_BIT(command, 3);
+    }
+    if (control->font == LCD_FONT_5X10)
+    {
+        SET_BIT(command, 2);
+    }
+    Lcd_SendCommand(command);
+
+    /* Display ON/OFF Control (0 0 0 0 1 D C B) */
+    command = 0b00001000;
+    if (control->display == LCD_DISPLAY_ON)
+    {
+        SET_BIT(command, 2);
+    }
+    if (control->cusror == LCD_CURSOR_ON_BLINK_OFF)
+    {
+        SET_BIT(command, 1);
+    }
+    else if (control->cusror == LCD_CURSOR_ON_BLINK_ON)
+    {
+        SET_BIT(command, 1);
+        SET_BIT(command, 0);
+    }
+    Lcd_SendCommand(command);
+}
+
+
 
 static void Lcd_SendData (u8 data)
 {
