@@ -14,15 +14,8 @@
 int main (void)
 {
     Lcd_Init();
-    while (1)
-    {
-        Lcd_SendData('A');
-        Lcd_SendData('h');
-        Lcd_SendData('m');
-        Lcd_SendData('e');
-        Lcd_SendData('d');
-        _delay_ms(1000);
-        Lcd_ClearDisplay();
-        _delay_ms(1000);
-    }
+    // (- Ahmed 3510)
+    Lcd_DisplayCharacter("- ");
+    Lcd_DisplayString("Ahmed ");
+    Lcd_DisplayNumber(3510);
 }
