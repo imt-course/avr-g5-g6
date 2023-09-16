@@ -6,28 +6,23 @@
  */
 
 #include "StdTypes.h"
+#include "Delay.h"
 #include "Dio.h"
-
-#define LED_PIN         DIO_PORTA,DIO_PIN0
-#define SWITCH_PIN      DIO_PORTA,DIO_PIN1
+#include "Lcd.h"
 
 
 int main (void)
 {
-    Dio_LevelType currentState = DIO_HIGH;
-    Dio_LevelType lastState = DIO_HIGH;
-    
-    /* Initialization */
-    Dio_SetPinMode(LED_PIN, DIO_MODE_OUTPUT);
-    Dio_SetPinMode(SWITCH_PIN, DIO_MODE_INPUT_PULLUP);
+    Lcd_Init();
     while (1)
     {
-        currentState = Dio_ReadPinLevel(SWITCH_PIN);
-        if ((DIO_LOW == currentState) && (DIO_HIGH == lastState))
-        {
-            Dio_FlipPinLevel(LED_PIN);
-        }
-        lastState = currentState;
+        Lcd_SendData('A');
+        Lcd_SendData('h');
+        Lcd_SendData('m');
+        Lcd_SendData('e');
+        Lcd_SendData('d');
+        _delay_ms(1000);
+        Lcd_ClearDisplay();
+        _delay_ms(1000);
     }
-
 }
