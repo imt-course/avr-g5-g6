@@ -15,7 +15,12 @@ int main (void)
 {
     Lcd_Init();
     // (- Ahmed 3510)
-    Lcd_DisplayCharacter("- ");
+    Lcd_DisplayCharacter('-');
     Lcd_DisplayString("Ahmed ");
     Lcd_DisplayNumber(3510);
+    while (1)
+    {
+        
+    }
+    
 }
