@@ -21,15 +21,27 @@ void Lcd_Init(const Lcd_ControlType* config)
     Dio_SetPinMode(LCD_PIN_RS, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_RW, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_EN, DIO_MODE_OUTPUT);
+#if (LCD_MODE == LCD_MODE_8_BIT)
     Dio_SetPinMode(LCD_PIN_D0, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_D1, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_D2, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_D3, DIO_MODE_OUTPUT);
+#endif
     Dio_SetPinMode(LCD_PIN_D4, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_D5, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_D6, DIO_MODE_OUTPUT);
     Dio_SetPinMode(LCD_PIN_D7, DIO_MODE_OUTPUT);
+
+#if (LCD_MODE == LCD_MODE_4_BIT)
+    /* Enter 4-Bit Mode */
+    Dio_SetPinLevel(LCD_PIN_D4, DIO_LOW);
+    Dio_SetPinLevel(LCD_PIN_D5, DIO_HIGH);
+    Dio_SetPinLevel(LCD_PIN_D6, DIO_LOW);
+    Dio_SetPinLevel(LCD_PIN_D7, DIO_LOW);
+#endif
+
     Lcd_ControlDisplay(config);
+
     /* Display Clear */
     Lcd_SendCommand(0b00000001);
 }
@@ -118,6 +130,7 @@ static void Lcd_SendData (u8 data)
 {
     Dio_SetPinLevel(LCD_PIN_RS, DIO_HIGH);
     Dio_SetPinLevel(LCD_PIN_RW, DIO_LOW);
+#if (LCD_MODE == LCD_MODE_8_BIT)
     Dio_SetPinLevel(LCD_PIN_D0, GET_BIT(data, 0));
     Dio_SetPinLevel(LCD_PIN_D1, GET_BIT(data, 1));
     Dio_SetPinLevel(LCD_PIN_D2, GET_BIT(data, 2));
@@ -129,12 +142,31 @@ static void Lcd_SendData (u8 data)
     Dio_SetPinLevel(LCD_PIN_EN, DIO_HIGH);
     _delay_ms(2);
     Dio_SetPinLevel(LCD_PIN_EN, DIO_LOW);  
+#elif (LCD_MODE == LCD_MODE_4_BIT)
+    Dio_SetPinLevel(LCD_PIN_D4, GET_BIT(data, 4));
+    Dio_SetPinLevel(LCD_PIN_D5, GET_BIT(data, 5));
+    Dio_SetPinLevel(LCD_PIN_D6, GET_BIT(data, 6));
+    Dio_SetPinLevel(LCD_PIN_D7, GET_BIT(data, 7));
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_HIGH);
+    _delay_ms(2);
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_LOW);
+    Dio_SetPinLevel(LCD_PIN_D4, GET_BIT(data, 0));
+    Dio_SetPinLevel(LCD_PIN_D5, GET_BIT(data, 1));
+    Dio_SetPinLevel(LCD_PIN_D6, GET_BIT(data, 2));
+    Dio_SetPinLevel(LCD_PIN_D7, GET_BIT(data, 3));
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_HIGH);
+    _delay_ms(2);
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_LOW);
+#else
+    #error "[LCD]: Invalid LCD Mode, Options: LCD_MODE_4_BIT, LCD_MODE_8_BIT"
+#endif
 }
 
 static void Lcd_SendCommand (u8 command)
 {
     Dio_SetPinLevel(LCD_PIN_RS, DIO_LOW);
     Dio_SetPinLevel(LCD_PIN_RW, DIO_LOW);
+#if (LCD_MODE == LCD_MODE_8_BIT)
     Dio_SetPinLevel(LCD_PIN_D0, GET_BIT(command, 0));
     Dio_SetPinLevel(LCD_PIN_D1, GET_BIT(command, 1));
     Dio_SetPinLevel(LCD_PIN_D2, GET_BIT(command, 2));
@@ -145,5 +177,23 @@ static void Lcd_SendCommand (u8 command)
     Dio_SetPinLevel(LCD_PIN_D7, GET_BIT(command, 7));
     Dio_SetPinLevel(LCD_PIN_EN, DIO_HIGH);
     _delay_ms(2);
-    Dio_SetPinLevel(LCD_PIN_EN, DIO_LOW);  
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_LOW);
+#elif (LCD_MODE == LCD_MODE_4_BIT)
+    Dio_SetPinLevel(LCD_PIN_D4, GET_BIT(command, 4));
+    Dio_SetPinLevel(LCD_PIN_D5, GET_BIT(command, 5));
+    Dio_SetPinLevel(LCD_PIN_D6, GET_BIT(command, 6));
+    Dio_SetPinLevel(LCD_PIN_D7, GET_BIT(command, 7));
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_HIGH);
+    _delay_ms(2);
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_LOW);
+    Dio_SetPinLevel(LCD_PIN_D4, GET_BIT(command, 0));
+    Dio_SetPinLevel(LCD_PIN_D5, GET_BIT(command, 1));
+    Dio_SetPinLevel(LCD_PIN_D6, GET_BIT(command, 2));
+    Dio_SetPinLevel(LCD_PIN_D7, GET_BIT(command, 3));
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_HIGH);
+    _delay_ms(2);
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_LOW);
+#else
+    #error "[LCD]: Invalid LCD Mode, Options: LCD_MODE_4_BIT, LCD_MODE_8_BIT"
+#endif
 }

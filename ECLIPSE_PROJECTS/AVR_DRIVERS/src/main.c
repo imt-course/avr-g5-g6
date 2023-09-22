@@ -14,9 +14,7 @@
 int main (void)
 {
     Lcd_Init(&Lcd_Configuration);
-    Lcd_DisplayCharacter('-');
     Lcd_DisplayString("Ahmed ");
-    Lcd_DisplayNumber(sizeof(int));
     while (1)
     {
         
