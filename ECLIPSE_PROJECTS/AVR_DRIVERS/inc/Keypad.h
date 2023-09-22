@@ -31,11 +31,12 @@ typedef enum
     KEYPAD_B12,
     KEYPAD_B13,
     KEYPAD_B14,
-    KEYPAD_B15
+    KEYPAD_B15,
+    KEYPAD_INVALID
 } Keypad_ButtonType;
 
 void Keypad_Init(void);
 Keypad_StateType Keypad_GetButtonState(Keypad_ButtonType button);
-
+Keypad_ButtonType Keypad_GetPressedButton(void);
 
 #endif /* INC_KEYPAD_H_ */

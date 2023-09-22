@@ -15,6 +15,7 @@
 int main (void)
 {
     Keypad_ButtonType counter;
+    u8 buttonFlags[16] = {0};
     Lcd_Init(&Lcd_Configuration);
     Keypad_Init();
     while (1)
@@ -23,7 +24,15 @@ int main (void)
         {
             if(Keypad_GetButtonState(counter) == KEYPAD_PRESSED)
             {
-                Lcd_DisplayNumber(counter);
+                if (buttonFlags[counter] == 0)
+                {
+                    Lcd_DisplayNumber(counter);
+                    buttonFlags[counter] = 1;
+                }
+            }
+            else
+            {
+                buttonFlags[counter] = 0;
             }
         }
     }

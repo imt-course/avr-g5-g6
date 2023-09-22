@@ -113,3 +113,19 @@ static void Keypad_SetRowLevel(u8 row, Dio_LevelType level)
     }
 
 }
+
+
+Keypad_ButtonType Keypad_GetPressedButton(void)
+{
+    Keypad_ButtonType button = KEYPAD_INVALID;
+    u8 counter;
+    for (counter = KEYPAD_B00; counter <= KEYPAD_B15; counter++)
+    {
+        if(Keypad_GetButtonState(counter) == KEYPAD_PRESSED)
+        {
+            button = counter;
+            break;
+        }
+    }
+    return button;
+}
