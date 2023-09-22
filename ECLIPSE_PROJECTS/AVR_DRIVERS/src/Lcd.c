@@ -34,6 +34,7 @@ void Lcd_Init(const Lcd_ControlType* config)
 
 #if (LCD_MODE == LCD_MODE_4_BIT)
     /* Enter 4-Bit Mode */
+    //Lcd_SendCommand(0x02);
     Dio_SetPinLevel(LCD_PIN_RS, DIO_LOW);
     Dio_SetPinLevel(LCD_PIN_RW, DIO_LOW);
     Dio_SetPinLevel(LCD_PIN_D4, DIO_LOW);
@@ -129,7 +130,35 @@ void Lcd_ControlDisplay(const Lcd_ControlType* control)
     Lcd_SendCommand(command);
 }
 
+void Lcd_ReturnHome (void)
+{
+    Lcd_SendCommand(0b00000010);
+}
 
+void Lcd_ShiftDisplayRight (u8 count)
+{
+    while (count > 0)
+    {
+        Lcd_SendCommand(0b00011100);
+        count--;
+    }
+}
+
+void Lcd_ShiftDisplayLeft (u8 count)
+{
+        while (count > 0)
+    {
+        Lcd_SendCommand(0b00011000);
+        count--;
+    }
+}
+
+void Lcd_SetCursorPosition (u8 row, u8 column)
+{
+    u8 address = column + 0x40*row;
+    SET_BIT(address, 7);
+    Lcd_SendCommand(address);
+}
 
 static void Lcd_SendData (u8 data)
 {

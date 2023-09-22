@@ -9,25 +9,24 @@
 #include "Delay.h"
 #include "Dio.h"
 #include "Lcd.h"
+#include "Keypad.h"
 
 
 int main (void)
 {
-    u8 count = 0;
+    Keypad_ButtonType counter;
     Lcd_Init(&Lcd_Configuration);
-    Lcd_DisplayString("My name is Ahmed Hassan");
-    Lcd_SetCursorPosition(1,5);
-    Lcd_DisplayString("Thank you --- ");
+    Keypad_Init();
     while (1)
     {
-        _delay_ms(500);
-        Lcd_ShiftDisplayLeft(1);
-        count++;
-        if (count > 8)
+        for (counter = KEYPAD_B00; counter <= KEYPAD_B15; counter++)
         {
-            Lcd_ReturnHome();
-            count = 0;
+            if(Keypad_GetButtonState(counter) == KEYPAD_PRESSED)
+            {
+                Lcd_DisplayNumber(counter);
+            }
         }
     }
+    
     
 }

@@ -52,5 +52,9 @@ void Lcd_DisplayCharacter (u8 data);
 void Lcd_DisplayString (char str[]);
 void Lcd_DisplayNumber (s32 number);
 void Lcd_ClearDisplay (void);
+void Lcd_ReturnHome (void);
+void Lcd_ShiftDisplayRight (u8 count);
+void Lcd_ShiftDisplayLeft (u8 count);
+void Lcd_SetCursorPosition (u8 row, u8 column);
 
 #endif /* INC_LCD_H_ */
