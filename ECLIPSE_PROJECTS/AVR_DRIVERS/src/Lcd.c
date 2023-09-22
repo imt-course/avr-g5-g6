@@ -34,10 +34,15 @@ void Lcd_Init(const Lcd_ControlType* config)
 
 #if (LCD_MODE == LCD_MODE_4_BIT)
     /* Enter 4-Bit Mode */
+    Dio_SetPinLevel(LCD_PIN_RS, DIO_LOW);
+    Dio_SetPinLevel(LCD_PIN_RW, DIO_LOW);
     Dio_SetPinLevel(LCD_PIN_D4, DIO_LOW);
     Dio_SetPinLevel(LCD_PIN_D5, DIO_HIGH);
     Dio_SetPinLevel(LCD_PIN_D6, DIO_LOW);
     Dio_SetPinLevel(LCD_PIN_D7, DIO_LOW);
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_HIGH);
+    _delay_ms(2);
+    Dio_SetPinLevel(LCD_PIN_EN, DIO_LOW);
 #endif
 
     Lcd_ControlDisplay(config);
