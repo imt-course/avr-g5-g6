@@ -10,32 +10,35 @@
 #include "Dio.h"
 #include "Lcd.h"
 #include "Keypad.h"
+#include "Interrupts.h"
+#include "Gie.h"
+#include "ExtInt.h"
 
+#define LED_PIN DIO_PORTA,DIO_PIN0
+
+
+ISR(VECTOR_INT0)
+{
+    Dio_FlipPinLevel(LED_PIN);
+}
+
+/*
+void __vector_1 (void) __attribute__((signal));
+void __vector_1 (void)
+{
+    Dio_FlipPinLevel(LED_PIN);
+}
+*/
 
 int main (void)
 {
-    Keypad_ButtonType counter;
-    u8 buttonFlags[16] = {0};
-    Lcd_Init(&Lcd_Configuration);
-    Keypad_Init();
+    Dio_SetPinMode(LED_PIN, DIO_MODE_OUTPUT);
+    Dio_SetPinMode(EXTINT_PIN_INT0, DIO_MODE_INPUT_PULLUP);
+    ExtInt_SetSenseControl(EXTINT_SOURCE_INT0, EXTINT_SENSE_FALLING_EDGE);
+    ExtInt_EnableInterrupt(EXTINT_SOURCE_INT0);
+    Gie_Enable();
     while (1)
     {
-        for (counter = KEYPAD_B00; counter <= KEYPAD_B15; counter++)
-        {
-            if(Keypad_GetButtonState(counter) == KEYPAD_PRESSED)
-            {
-                if (buttonFlags[counter] == 0)
-                {
-                    Lcd_DisplayNumber(counter);
-                    buttonFlags[counter] = 1;
-                }
-            }
-            else
-            {
-                buttonFlags[counter] = 0;
-            }
-        }
+        
     }
-    
-    
 }

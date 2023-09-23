@@ -30,4 +30,13 @@
 #define PORTD		*((volatile u8*) 0x32)
 #define PIND		*((const volatile u8*) 0x30)
 
+/************* GIE Registers *************/
+#define SREG		*((volatile u8*) 0x5F)
+
+/************* ExtInt Registers *************/
+#define MCUCR		*((volatile u8*) 0x55)
+#define MCUCSR		*((volatile u8*) 0x54)
+#define GICR		*((volatile u8*) 0x5B)
+#define GIFR		*((volatile u8*) 0x5A)
+
 #endif /* INC_REGISTERS_H_ */
