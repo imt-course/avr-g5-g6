@@ -19,4 +19,6 @@ typedef enum
     E_NOT_OK
 } StdReturnType;
 
+#define NULL_PTR    (void*)0
+
 #endif

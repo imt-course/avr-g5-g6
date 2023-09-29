@@ -7,7 +7,36 @@
 #include "StdTypes.h"
 #include "Macros.h"
 #include "Registers.h"
+#include "Interrupts.h"
 #include "ExtInt.h"
+
+static void (*Callbck_Int0) (void) = NULL_PTR;
+static void (*Callbck_Int1) (void) = NULL_PTR;
+static void (*Callbck_Int2) (void) = NULL_PTR;
+
+ISR(VECTOR_INT0)
+{
+    if(NULL_PTR != Callbck_Int0)
+    {
+        Callbck_Int0();
+    }
+}
+
+ISR(VECTOR_INT1)
+{
+    if(NULL_PTR != Callbck_Int1)
+    {
+        Callbck_Int1();
+    }
+}
+
+ISR(VECTOR_INT2)
+{
+    if(NULL_PTR != Callbck_Int2)
+    {
+        Callbck_Int2();
+    }
+}
 
 StdReturnType ExtInt_SetSenseControl (ExtInt_SourceType source, ExtInt_SenseType sense)
 {
@@ -124,6 +153,28 @@ StdReturnType ExtInt_DisableInterrupt (ExtInt_SourceType source)
     else 
     {
         retVal = E_NOT_OK;
+    }
+    return retVal;
+}
+
+
+StdReturnType ExtInt_SetCallback (ExtInt_SourceType source, void (*callbackPtr) (void))
+{
+    StdReturnType retVal = E_OK;
+    switch (source)
+    {
+    case EXTINT_SOURCE_INT0:
+        Callbck_Int0 = callbackPtr;
+        break;
+    case EXTINT_SOURCE_INT1:
+        Callbck_Int1 = callbackPtr;
+        break;
+    case EXTINT_SOURCE_INT2:
+        Callbck_Int2 = callbackPtr;
+        break;
+    default:
+        retVal = E_NOT_OK;
+        break;
     }
     return retVal;
 }

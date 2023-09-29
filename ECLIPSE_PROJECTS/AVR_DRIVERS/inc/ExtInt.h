@@ -33,7 +33,7 @@ typedef enum
 StdReturnType ExtInt_SetSenseControl (ExtInt_SourceType source, ExtInt_SenseType sense);
 StdReturnType ExtInt_EnableInterrupt (ExtInt_SourceType source);
 StdReturnType ExtInt_DisableInterrupt (ExtInt_SourceType source);
-
+StdReturnType ExtInt_SetCallback (ExtInt_SourceType source, void (*callbackPtr) (void));
 
 
 #endif /* INC_EXTINT_H_ */
