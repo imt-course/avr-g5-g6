@@ -16,36 +16,17 @@
 #include "Adc.h"
 #include "Lm35.h"
 
-#define LM35_CHANNEL    ADC_CHANNEL_ADC0
-#define LDR_CHANNEL     ADC_CHANNEL_ADC1
 
-volatile u8 counter = 0;
-volatile u16 resultAvg = 0;
-
-void Handler_ADC (Adc_ChannelType channel, u16 result)
-{
-    resultAvg += result;
-    counter++;
-}
 
 int main (void)
 {
-    Adc_Init(&Adc_Configuration);
-    Lcd_Init(&Lcd_Configuration);
-    Adc_SetCallback(Handler_ADC);
-    Adc_EnableInterrupt();
-    Gie_Enable();
+    Dio_SetPinMode(DIO_PORTA, DIO_PIN0, DIO_MODE_OUTPUT);
+    Dio_SetPinMode(DIO_PORTA, DIO_PIN1, DIO_MODE_OUTPUT);
     while (1)
     {
-        Adc_StartConversion(LDR_CHANNEL);
-        if (counter == 10)
-        {
-            Lcd_ClearDisplay();
-            Lcd_DisplayNumber(resultAvg / 10);
-            counter = 0;
-            resultAvg = 0;
-            _delay_ms(500);
-        }
+        Dio_FlipPinLevel(DIO_PORTA, DIO_PIN0);
+        Dio_FlipPinLevel(DIO_PORTA, DIO_PIN1);
+        _delay_ms(1000);
     }
     
 }
