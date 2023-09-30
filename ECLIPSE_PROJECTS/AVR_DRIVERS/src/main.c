@@ -31,6 +31,7 @@ int main (void)
         Lcd_DisplayString("Temp = ");
         Lcd_DisplayNumber(result);
         Lcd_DisplayString(" C");
+        result = 0;
         for (counter = 0; counter<10; counter++)
         {
             Adc_StartConversion(LDR_CHANNEL);
