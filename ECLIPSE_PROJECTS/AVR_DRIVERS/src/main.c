@@ -20,18 +20,27 @@
 int main (void)
 {
     u16 result;
+    u8 counter;
     Adc_Init(&Adc_Configuration);
     Lcd_Init(&Lcd_Configuration);
     while (1)
     {
         Lcd_ClearDisplay();
-        Adc_StartConversion(LM35_CHANNEL);
-        result = Adc_GetResult();
+        for (counter = 0; counter<10; counter++)
+        {
+            Adc_StartConversion(LM35_CHANNEL);
+            result += Adc_GetResult();
+        }
+        result /= 10;
         Lcd_DisplayString("Temp = ");
         Lcd_DisplayNumber(((u32)result*500)/1024);
         Lcd_DisplayString(" C");
-        Adc_StartConversion(LDR_CHANNEL);
-        result = Adc_GetResult();
+        for (counter = 0; counter<10; counter++)
+        {
+            Adc_StartConversion(LDR_CHANNEL);
+            result += Adc_GetResult();
+        }
+        result /= 10;
         Lcd_SetCursorPosition(1,0);
         Lcd_DisplayString("LDR = ");
         Lcd_DisplayNumber(((u32)result*5000)/1024);
