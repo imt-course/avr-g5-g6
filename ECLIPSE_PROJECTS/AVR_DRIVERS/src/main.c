@@ -22,7 +22,7 @@
 volatile u8 counter = 0;
 volatile u16 resultAvg = 0;
 
-void Handler_ADC (u16 result)
+void Handler_ADC (Adc_ChannelType channel, u16 result)
 {
     resultAvg += result;
     counter++;

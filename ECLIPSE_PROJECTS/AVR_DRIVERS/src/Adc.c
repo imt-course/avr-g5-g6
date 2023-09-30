@@ -10,13 +10,13 @@
 #include "Interrupts.h"
 #include "Adc.h"
 
-void (*Callback_Adc) (u16 result) = NULL_PTR;
+static void (*Callback_Adc) (Adc_ChannelType channel, u16 result) = NULL_PTR;
 
 ISR(VECTOR_ADC)
 {
     if (NULL_PTR != Callback_Adc)
     {
-        Callback_Adc(ADCDATA&0x3FF);
+        Callback_Adc((ADMUX&0b11111), (ADCDATA&0x3FF));
     }
 }
 

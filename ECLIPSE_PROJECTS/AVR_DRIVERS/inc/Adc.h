@@ -91,6 +91,6 @@ StdReturnType Adc_StartConversion (Adc_ChannelType channel);
 u16 Adc_GetResult (void);
 void Adc_EnableInterrupt(void);
 void Adc_DisableInterrupt(void);
-void Adc_SetCallback(void (*callbackPtr) (u16 result));
+void Adc_SetCallback(void (*callbackPtr) (Adc_ChannelType channel, u16 result));
 
 #endif /* INC_ADC_H_ */
