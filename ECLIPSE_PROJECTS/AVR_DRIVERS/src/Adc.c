@@ -10,6 +10,16 @@
 #include "Interrupts.h"
 #include "Adc.h"
 
+void (*Callback_Adc) (u16 result) = NULL_PTR;
+
+ISR(VECTOR_ADC)
+{
+    if (NULL_PTR != Callback_Adc)
+    {
+        Callback_Adc(ADCDATA&0x3FF);
+    }
+}
+
 StdReturnType Adc_Init (Adc_ConfigurationType* config)
 {
     StdReturnType retVal = E_OK;
@@ -152,3 +162,17 @@ u16 Adc_GetResult (void)
     return (ADCDATA & 0x3FF);
 }
 
+void Adc_EnableInterrupt(void)
+{
+    SET_BIT(ADCSRA, 3);
+}
+
+void Adc_DisableInterrupt(void)
+{
+    CLR_BIT(ADCSRA, 3);
+}
+
+void Adc_SetCallback(void (*callbackPtr) (u16 result))
+{
+    Callback_Adc = callbackPtr;
+}
