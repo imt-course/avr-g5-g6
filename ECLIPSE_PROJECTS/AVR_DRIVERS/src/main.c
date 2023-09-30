@@ -15,6 +15,8 @@
 #include "ExtInt.h"
 #include "Adc.h"
 
+#define LM35_CHANNEL    ADC_CHANNEL_ADC0
+#define LDR_CHANNEL     ADC_CHANNEL_ADC1
 int main (void)
 {
     u16 result;
@@ -22,9 +24,16 @@ int main (void)
     Lcd_Init(&Lcd_Configuration);
     while (1)
     {
-        Adc_StartConversion(ADC_CHANNEL_ADC0);
-        result = Adc_GetResult();
         Lcd_ClearDisplay();
+        Adc_StartConversion(LM35_CHANNEL);
+        result = Adc_GetResult();
+        Lcd_DisplayString("Temp = ");
+        Lcd_DisplayNumber(((u32)result*500)/1024);
+        Lcd_DisplayString(" C");
+        Adc_StartConversion(LDR_CHANNEL);
+        result = Adc_GetResult();
+        Lcd_SetCursorPosition(1,0);
+        Lcd_DisplayString("LDR = ");
         Lcd_DisplayNumber(((u32)result*5000)/1024);
         _delay_ms(500);
     }
