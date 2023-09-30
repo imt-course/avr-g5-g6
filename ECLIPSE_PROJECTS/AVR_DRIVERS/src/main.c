@@ -44,8 +44,8 @@ int main (void)
             Lcd_DisplayNumber(resultAvg / 10);
             counter = 0;
             resultAvg = 0;
+            _delay_ms(500);
         }
-        _delay_ms(500);
     }
     
 }
