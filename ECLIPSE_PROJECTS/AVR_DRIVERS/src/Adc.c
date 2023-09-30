@@ -172,7 +172,7 @@ void Adc_DisableInterrupt(void)
     CLR_BIT(ADCSRA, 3);
 }
 
-void Adc_SetCallback(void (*callbackPtr) (u16 result))
+void Adc_SetCallback(void (*callbackPtr) (Adc_ChannelType channel, u16 result))
 {
     Callback_Adc = callbackPtr;
 }
