@@ -14,6 +14,7 @@
 #include "Gie.h"
 #include "ExtInt.h"
 #include "Adc.h"
+#include "Lm35.h"
 
 #define LM35_CHANNEL    ADC_CHANNEL_ADC0
 #define LDR_CHANNEL     ADC_CHANNEL_ADC1
@@ -26,14 +27,9 @@ int main (void)
     while (1)
     {
         Lcd_ClearDisplay();
-        for (counter = 0; counter<10; counter++)
-        {
-            Adc_StartConversion(LM35_CHANNEL);
-            result += Adc_GetResult();
-        }
-        result /= 10;
+        result = Lm35_GetTemperature(LM35_CHANNEL, 10, 1);
         Lcd_DisplayString("Temp = ");
-        Lcd_DisplayNumber(((u32)result*500)/1024);
+        Lcd_DisplayNumber(result);
         Lcd_DisplayString(" C");
         for (counter = 0; counter<10; counter++)
         {
