@@ -18,15 +18,14 @@
 int main (void)
 {
     u16 result;
-    //Dio_SetPinMode(DIO_PORTA, DIO_PIN0, DIO_MODE_INPUT_FLOATING);
-    Adc_Init();
+    Adc_Init(&Adc_Configuration);
     Lcd_Init(&Lcd_Configuration);
     while (1)
     {
-        Adc_StartConversion();
+        Adc_StartConversion(ADC_CHANNEL_ADC0);
         result = Adc_GetResult();
         Lcd_ClearDisplay();
-        Lcd_DisplayNumber(result);
+        Lcd_DisplayNumber(((u32)result*5000)/1024);
         _delay_ms(500);
     }
     
