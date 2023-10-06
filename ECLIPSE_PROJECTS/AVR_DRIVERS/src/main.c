@@ -20,28 +20,27 @@
 
 volatile counter = 0;
 
-void Handler_Tim0_Ovf (void)
+void Handler_Tim0_Comp (void)
 {
-    TCNT0 = 6;
     counter++;
 }
 
 int main (void)
 {
     Dio_SetPinMode(DIO_PORTA, DIO_PIN0, DIO_MODE_OUTPUT);
-    Gpt_Init();
-    TCNT0 = 6;
-    Gpt_EnableInterrupt();
-    Gpt_SetCallback(Handler_Tim0_Ovf);
+    Dio_SetPinMode(GPT_PIN_OC0, DIO_MODE_OUTPUT);
+    Gpt_Init(&Gpt_Configuration);
+    Gpt_SetCompareValue(GPT_COMP0, 250);
+    Gpt_EnableInterrupt(GPT_INT_SOURCE_TIM0_COMP);
+    Gpt_SetCallback(GPT_INT_SOURCE_TIM0_COMP, Handler_Tim0_Comp);
     Gie_Enable();
     while (1)
     {
-        if (counter == 4000)
+        if (counter == 500)
         {
             counter = 0;
             Dio_FlipPinLevel(DIO_PORTA, DIO_PIN0);
         }
-
     }
     
     
