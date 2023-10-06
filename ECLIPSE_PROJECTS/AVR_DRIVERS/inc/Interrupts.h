@@ -15,5 +15,6 @@ void vector (void)
 #define VECTOR_INT1     __vector_2
 #define VECTOR_INT2     __vector_3
 #define VECTOR_ADC      __vector_16
+#define VECTOR_TIM0_OVF __vector_11
 
 #endif /* INC_INTERRUPTS_H_ */

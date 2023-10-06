@@ -6,6 +6,7 @@
  */
 
 #include "StdTypes.h"
+#include "Registers.h"
 #include "Delay.h"
 #include "Dio.h"
 #include "Lcd.h"
@@ -15,18 +16,33 @@
 #include "ExtInt.h"
 #include "Adc.h"
 #include "Lm35.h"
+#include "Gpt.h"
 
+volatile counter = 0;
 
+void Handler_Tim0_Ovf (void)
+{
+    TCNT0 = 6;
+    counter++;
+}
 
 int main (void)
 {
     Dio_SetPinMode(DIO_PORTA, DIO_PIN0, DIO_MODE_OUTPUT);
-    Dio_SetPinMode(DIO_PORTA, DIO_PIN1, DIO_MODE_OUTPUT);
+    Gpt_Init();
+    TCNT0 = 6;
+    Gpt_EnableInterrupt();
+    Gpt_SetCallback(Handler_Tim0_Ovf);
+    Gie_Enable();
     while (1)
     {
-        Dio_FlipPinLevel(DIO_PORTA, DIO_PIN0);
-        Dio_FlipPinLevel(DIO_PORTA, DIO_PIN1);
-        _delay_ms(1000);
+        if (counter == 4000)
+        {
+            counter = 0;
+            Dio_FlipPinLevel(DIO_PORTA, DIO_PIN0);
+        }
+
     }
+    
     
 }
