@@ -31,7 +31,7 @@ int main (void)
         for (i=1000; i<=2000; i+=100)
         {
             Pwm_SetTimeOn(PWM_OUT_OC1A, i);
-            _delay_ms(100);
+            _delay_ms(500);
         }
     }
     

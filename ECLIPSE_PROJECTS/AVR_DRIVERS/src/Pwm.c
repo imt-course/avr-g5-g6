@@ -54,12 +54,8 @@ StdReturnType Pwm_Init (Pwm_ConfigurationType* config)
         /* Clock Select */
         Pwm_SetClockSource(PWM_CH0, config->OC0_clk);
     }
-    else if (PWM_MODE_OFF != config->OC1_mode)
+    if (PWM_MODE_OFF != config->OC1_mode)
     {
-        /* Set OC1A Pin to Output */
-        Dio_SetPinMode(PWM_PIN_OC1A, DIO_MODE_OUTPUT);
-        Dio_SetPinMode(PWM_PIN_OC1B, DIO_MODE_OUTPUT);
-
         /* Waveform Generation Mode */
         if (config->OC1_mode == PWM_MODE_FAST)
         {
@@ -68,7 +64,7 @@ StdReturnType Pwm_Init (Pwm_ConfigurationType* config)
             SET_BIT(TCCR1B, 3);
             SET_BIT(TCCR1B, 4);
         }
-        else if (config->OC0_mode == PWM_MODE_PHASE_CORRECT)
+        else if (config->OC1_mode == PWM_MODE_PHASE_CORRECT)
         {
             SET_BIT(TCCR1A, 0);
             SET_BIT(TCCR1A, 1);
@@ -113,27 +109,27 @@ StdReturnType Pwm_Init (Pwm_ConfigurationType* config)
         if (config->OC1A_out == PWM_OUT_CLR_THEN_SET)
         {
             Dio_SetPinMode(PWM_PIN_OC1A, DIO_MODE_OUTPUT);
-            CLR_BIT(TCCR0, 6);
-            SET_BIT(TCCR0, 7);
+            CLR_BIT(TCCR1A, 6);
+            SET_BIT(TCCR1A, 7);
         }
         else if (config->OC1A_out == PWM_OUT_SET_THEN_CLR)
         {
             Dio_SetPinMode(PWM_PIN_OC1A, DIO_MODE_OUTPUT);
-            SET_BIT(TCCR0, 6);
-            SET_BIT(TCCR0, 7);
+            SET_BIT(TCCR1A, 6);
+            SET_BIT(TCCR1A, 7);
         }
 
         if (config->OC1B_out == PWM_OUT_CLR_THEN_SET)
         {
             Dio_SetPinMode(PWM_PIN_OC1B, DIO_MODE_OUTPUT);
-            CLR_BIT(TCCR0, 4);
-            SET_BIT(TCCR0, 5);
+            CLR_BIT(TCCR1A, 4);
+            SET_BIT(TCCR1A, 5);
         }
         else if (config->OC1B_out == PWM_OUT_SET_THEN_CLR)
         {
             Dio_SetPinMode(PWM_PIN_OC1B, DIO_MODE_OUTPUT);
-            SET_BIT(TCCR0, 4);
-            SET_BIT(TCCR0, 5);
+            SET_BIT(TCCR1A, 4);
+            SET_BIT(TCCR1A, 5);
         }
 
         /* Clock Select */
