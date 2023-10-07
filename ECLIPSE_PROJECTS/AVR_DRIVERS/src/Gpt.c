@@ -134,12 +134,12 @@ StdReturnType Gpt_SetClockSource (Gpt_ChannelType channel, Gpt_ClkSourceType clk
             CLR_BIT(TCCR0, 1);
             SET_BIT(TCCR0, 2);
             break;
-        case GPT_CLK_PRESCALER_EXT_FALLING:
+        case GPT_CLK_EXT_FALLING:
             CLR_BIT(TCCR0, 0);
             SET_BIT(TCCR0, 1);
             SET_BIT(TCCR0, 2);
             break;
-        case GPT_CLK_PRESCALER_EXT_RISING:
+        case GPT_CLK_EXT_RISING:
             SET_BIT(TCCR0, 0);
             SET_BIT(TCCR0, 1);
             SET_BIT(TCCR0, 2);
