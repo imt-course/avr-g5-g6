@@ -89,5 +89,6 @@ StdReturnType Pwm_Init (Pwm_ConfigurationType* config);
 void Pwm_SetClockSource(Pwm_ChannelType channel, Pwm_ClkSourceType clk);
 void Pwm_SetTimeOn (Pwm_OutChannelType out, u16 time);
 void Pwm_SetDutyCycle (Pwm_OutChannelType out, u8 dutyCycle);
+void Pwm_SetICR1 (u16 value);
 
 #endif /* INC_PWM_H_ */

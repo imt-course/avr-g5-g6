@@ -25,16 +25,18 @@ int main (void)
 {
     u16 i;
     Pwm_Init(&Pwm_Configuration);
-    ICR1 = 20000;
+    Pwm_SetICR1(20000);
     while (1)
     {
-        for (i=1000; i<=2000; i+=100)
+        for (i=300; i<=2300; i+=100)
+        {
+            Pwm_SetTimeOn(PWM_OUT_OC1A, i);
+            _delay_ms(500);
+        }
+        for (i=2300; i>=300; i-=100)
         {
             Pwm_SetTimeOn(PWM_OUT_OC1A, i);
             _delay_ms(500);
         }
     }
-    
-    
-    
 }

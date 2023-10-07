@@ -287,3 +287,8 @@ void Pwm_SetDutyCycle (Pwm_OutChannelType out, u8 dutyCycle)
         break;
     }
 }
+
+void Pwm_SetICR1 (u16 value)
+{
+    ICR1 = value;
+}
