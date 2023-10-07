@@ -19,23 +19,19 @@
 #include "Gpt.h"
 #include "Pwm.h"
 
-volatile counter = 0;
 
-void Handler_Tim0_Comp (void)
-{
-    counter++;
-}
 
 int main (void)
 {
-    u8 i;
+    u16 i;
     Pwm_Init(&Pwm_Configuration);
+    ICR1 = 20000;
     while (1)
     {
-        for (i=0; i<=100; i+=10)
+        for (i=1000; i<=2000; i+=100)
         {
-            Pwm_SetDutyCycle(PWM_OUT_OC0, i);
-            _delay_ms(250);
+            Pwm_SetTimeOn(PWM_OUT_OC1A, i);
+            _delay_ms(100);
         }
     }
     

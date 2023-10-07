@@ -54,6 +54,91 @@ StdReturnType Pwm_Init (Pwm_ConfigurationType* config)
         /* Clock Select */
         Pwm_SetClockSource(PWM_CH0, config->OC0_clk);
     }
+    else if (PWM_MODE_OFF != config->OC1_mode)
+    {
+        /* Set OC1A Pin to Output */
+        Dio_SetPinMode(PWM_PIN_OC1A, DIO_MODE_OUTPUT);
+        Dio_SetPinMode(PWM_PIN_OC1B, DIO_MODE_OUTPUT);
+
+        /* Waveform Generation Mode */
+        if (config->OC1_mode == PWM_MODE_FAST)
+        {
+            SET_BIT(TCCR1A, 0);
+            SET_BIT(TCCR1A, 1);
+            SET_BIT(TCCR1B, 3);
+            SET_BIT(TCCR1B, 4);
+        }
+        else if (config->OC0_mode == PWM_MODE_PHASE_CORRECT)
+        {
+            SET_BIT(TCCR1A, 0);
+            SET_BIT(TCCR1A, 1);
+            CLR_BIT(TCCR1B, 3);
+            SET_BIT(TCCR1B, 4);
+        }
+        else if (config->OC1_mode == PWM_MODE_FAST_ICR1)
+        {
+            CLR_BIT(TCCR1A, 0);
+            SET_BIT(TCCR1A, 1);
+            SET_BIT(TCCR1B, 3);
+            SET_BIT(TCCR1B, 4);
+        }
+        else if (config->OC1_mode == PWM_MODE_FAST_8_BIT)
+        {
+            SET_BIT(TCCR1A, 0);
+            CLR_BIT(TCCR1A, 1);
+            CLR_BIT(TCCR1B, 3);
+            CLR_BIT(TCCR1B, 4);
+        }
+        else if (config->OC1_mode == PWM_MODE_FAST_9_BIT)
+        {
+            CLR_BIT(TCCR1A, 0);
+            SET_BIT(TCCR1A, 1);
+            SET_BIT(TCCR1B, 3);
+            CLR_BIT(TCCR1B, 4);
+        }
+        else if (config->OC1_mode == PWM_MODE_FAST_10_BIT)
+        {
+            SET_BIT(TCCR1A, 0);
+            SET_BIT(TCCR1A, 1);
+            SET_BIT(TCCR1B, 3);
+            CLR_BIT(TCCR1B, 4);
+        }
+        /** TODO: Complete all PWM1 Modes */
+        else
+        {
+            retVal = E_NOT_OK;
+        }
+
+        /* Compare Match Output Mode */
+        if (config->OC1A_out == PWM_OUT_CLR_THEN_SET)
+        {
+            Dio_SetPinMode(PWM_PIN_OC1A, DIO_MODE_OUTPUT);
+            CLR_BIT(TCCR0, 6);
+            SET_BIT(TCCR0, 7);
+        }
+        else if (config->OC1A_out == PWM_OUT_SET_THEN_CLR)
+        {
+            Dio_SetPinMode(PWM_PIN_OC1A, DIO_MODE_OUTPUT);
+            SET_BIT(TCCR0, 6);
+            SET_BIT(TCCR0, 7);
+        }
+
+        if (config->OC1B_out == PWM_OUT_CLR_THEN_SET)
+        {
+            Dio_SetPinMode(PWM_PIN_OC1B, DIO_MODE_OUTPUT);
+            CLR_BIT(TCCR0, 4);
+            SET_BIT(TCCR0, 5);
+        }
+        else if (config->OC1B_out == PWM_OUT_SET_THEN_CLR)
+        {
+            Dio_SetPinMode(PWM_PIN_OC1B, DIO_MODE_OUTPUT);
+            SET_BIT(TCCR0, 4);
+            SET_BIT(TCCR0, 5);
+        }
+
+        /* Clock Select */
+        Pwm_SetClockSource(PWM_CH1, config->OC1_clk);
+    }
     return retVal;
 }
 
@@ -109,7 +194,51 @@ void Pwm_SetClockSource(Pwm_ChannelType channel, Pwm_ClkSourceType clk)
     }
     else if (PWM_CH1 == channel)
     {
-        /** TODO: */
+        switch (clk)
+        {
+        case PWM_CLK_OFF:
+            CLR_BIT(TCCR1B, 0);
+            CLR_BIT(TCCR1B, 1);
+            CLR_BIT(TCCR1B, 2);
+            break;
+        case PWM_CLK_PRESCALER_1:
+            SET_BIT(TCCR1B, 0);
+            CLR_BIT(TCCR1B, 1);
+            CLR_BIT(TCCR1B, 2);
+            break;
+        case PWM_CLK_PRESCALER_8:
+            CLR_BIT(TCCR1B, 0);
+            SET_BIT(TCCR1B, 1);
+            CLR_BIT(TCCR1B, 2);
+            break;
+        case PWM_CLK_PRESCALER_64:
+            SET_BIT(TCCR1B, 0);
+            SET_BIT(TCCR1B, 1);
+            CLR_BIT(TCCR1B, 2);
+            break;
+        case PWM_CLK_PRESCALER_256:
+            CLR_BIT(TCCR1B, 0);
+            CLR_BIT(TCCR1B, 1);
+            SET_BIT(TCCR1B, 2);
+            break;
+        case PWM_CLK_PRESCALER_1024:
+            SET_BIT(TCCR1B, 0);
+            CLR_BIT(TCCR1B, 1);
+            SET_BIT(TCCR1B, 2);
+            break;
+        case PWM_CLK_EXT_FALLING:
+            CLR_BIT(TCCR1B, 0);
+            SET_BIT(TCCR1B, 1);
+            SET_BIT(TCCR1B, 2);
+            break;
+        case PWM_CLK_EXT_RISING:
+            SET_BIT(TCCR1B, 0);
+            SET_BIT(TCCR1B, 1);
+            SET_BIT(TCCR1B, 2);
+            break;
+        default:
+            break;
+        }
     }
     else if (PWM_CH2 == channel)
     {
@@ -144,7 +273,7 @@ void Pwm_SetTimeOn (Pwm_OutChannelType out, u16 time)
 
 void Pwm_SetDutyCycle (Pwm_OutChannelType out, u8 dutyCycle)
 {
-        switch (out)
+    switch (out)
     {
     case PWM_OUT_OC0:
         OCR0 = ((u32)dutyCycle*0xFF/100);
