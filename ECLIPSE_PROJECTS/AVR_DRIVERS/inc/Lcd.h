@@ -56,5 +56,6 @@ void Lcd_ReturnHome (void);
 void Lcd_ShiftDisplayRight (u8 count);
 void Lcd_ShiftDisplayLeft (u8 count);
 void Lcd_SetCursorPosition (u8 row, u8 column);
+void Lcd_Print (char* str, ...);
 
 #endif /* INC_LCD_H_ */

@@ -5,6 +5,7 @@
  *      Author: ahmad
  */
 
+#include <stdarg.h>
 #include "StdTypes.h"
 #include "Macros.h"
 #include "Dio.h"
@@ -159,6 +160,64 @@ void Lcd_SetCursorPosition (u8 row, u8 column)
     SET_BIT(address, 7);
     Lcd_SendCommand(address);
 }
+
+void Lcd_Print (char* str, ...)
+{
+    va_list var_list;
+    va_start(var_list, str);
+    while(*str != 0)
+    {
+        if (*str == '%')
+        {
+            f64 number;
+            u64 temp;
+            str++;
+            switch (*str)
+            {
+            case 'd':
+                Lcd_DisplayNumber(va_arg(var_list, int));
+                break;
+            case 'c':
+                Lcd_DisplayCharacter((char)va_arg(var_list, int));
+                break;
+            case 'l':
+                if (*(str+1) == 'd')
+                {
+                    Lcd_DisplayNumber(va_arg(var_list, long int));
+                    str++;
+                }
+                break;
+            case 'u':
+                if (*(str+1) == 'l')
+                {
+                    Lcd_DisplayNumber(va_arg(var_list, unsigned long int));
+                    str++;
+                }
+                else
+                {
+                    Lcd_DisplayNumber(va_arg(var_list, unsigned int));
+                }
+                break;
+            case 'f':
+                number = va_arg(var_list, double);
+                temp = (int)number;
+                Lcd_DisplayNumber(temp);
+                Lcd_DisplayCharacter('.');
+                number -= temp;
+                Lcd_DisplayNumber((int)(number*100));
+                break;
+            default:
+                break;
+            }
+        }
+        else
+        {
+            Lcd_DisplayCharacter(*str);
+        }
+        str++;
+    }
+}
+
 
 static void Lcd_SendData (u8 data)
 {

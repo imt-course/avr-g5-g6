@@ -73,11 +73,9 @@ int main (void)
     Gie_Enable();
     while (1)
     {
-        Lcd_DisplayString("T_on = ");
-        Lcd_DisplayNumber(T_on);
+        Lcd_Print("T_on = %ld", T_on);
         Lcd_SetCursorPosition(1,0);
-        Lcd_DisplayString("T_total = ");
-        Lcd_DisplayNumber(T_total);
+        Lcd_Print("T_total = %ld", T_total);
         _delay_ms(500);
         Lcd_ClearDisplay();
     }
