@@ -25,7 +25,6 @@ typedef enum
     GPT_INT_SOURCE_TIM1_OVF,
     GPT_INT_SOURCE_TIM1_COMPA,
     GPT_INT_SOURCE_TIM1_COMPB,
-    GPT_INT_SOURCE_TIM1_CAPT,
     GPT_INT_SOURCE_TIM2_OVF,
     GPT_INT_SOURCE_TIM2_COMP
 } Gpt_InterruptSourceType;
@@ -42,7 +41,8 @@ typedef enum
 {
     GPT_MODE_OFF,
     GPT_MODE_NORMAL,
-    GPT_MODE_CTC
+    GPT_MODE_CTC,
+    GPT_MODE_CTC_ICR1
 } Gpt_ModeType;
 
 typedef enum
