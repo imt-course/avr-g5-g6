@@ -21,6 +21,12 @@
 
 volatile u32 T_on = 0;
 volatile u32 T_total = 0;
+volatile u32 overflow_counter = 0;
+
+void Timer_Handler (void)
+{
+    overflow_counter++;
+}
 
 void ExtInt_Handler (void)
 {
@@ -28,18 +34,19 @@ void ExtInt_Handler (void)
     if (state == 1) 
     {
         Gpt_SetCounterValue(GPT_CHANNEL_TIM0, 0);
+        overflow_counter = 0;
         ExtInt_SetSenseControl(EXTINT_SOURCE_INT0, EXTINT_SENSE_FALLING_EDGE);
         state = 2;
     }
     else if (state == 2) 
     {
-        T_on = Gpt_GetElapsedTime(GPT_CHANNEL_TIM0);
+        T_on = Gpt_GetElapsedTime(GPT_CHANNEL_TIM0) + overflow_counter*0x100;
         ExtInt_SetSenseControl(EXTINT_SOURCE_INT0, EXTINT_SENSE_RISING_EDGE);
         state = 3;
     }
     else if (state == 3) 
     {
-        T_total = Gpt_GetElapsedTime(GPT_CHANNEL_TIM0);
+        T_total = Gpt_GetElapsedTime(GPT_CHANNEL_TIM0) + overflow_counter*0x100;
         state = 1;
     }
     else
@@ -56,6 +63,8 @@ int main (void)
     Pwm_Init(&Pwm_Configuration);
     Pwm_SetTimeOn(PWM_CH1, 1000);
     Pwm_SetICR1(5000);
+    Gpt_EnableInterrupt(GPT_INT_SOURCE_TIM0_OVF);
+    Gpt_SetCallback(GPT_INT_SOURCE_TIM0_OVF, Timer_Handler);
     Dio_SetPinMode(EXTINT_PIN_INT0, DIO_MODE_INPUT_FLOATING);
     ExtInt_SetSenseControl(EXTINT_SOURCE_INT0, EXTINT_SENSE_RISING_EDGE);
     ExtInt_EnableInterrupt(EXTINT_SOURCE_INT0);
