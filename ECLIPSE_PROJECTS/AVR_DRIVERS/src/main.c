@@ -56,6 +56,7 @@ int main (void)
     Pwm_Init(&Pwm_Configuration);
     Pwm_SetTimeOn(PWM_CH1, 1000);
     Pwm_SetICR1(5000);
+    Dio_SetPinMode(EXTINT_PIN_INT0, DIO_MODE_INPUT_FLOATING);
     ExtInt_SetSenseControl(EXTINT_SOURCE_INT0, EXTINT_SENSE_RISING_EDGE);
     ExtInt_EnableInterrupt(EXTINT_SOURCE_INT0);
     ExtInt_SetCallback(EXTINT_SOURCE_INT0, ExtInt_Handler);
