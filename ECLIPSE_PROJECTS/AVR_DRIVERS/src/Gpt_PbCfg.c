@@ -10,7 +10,7 @@ Gpt_ConfigurationType Gpt_Configuration =
 {
     /* Timer 0 */
     .TIM0_mode  = GPT_MODE_NORMAL,
-    .TIM0_clk   = GPT_CLK_PRESCALER_64,
+    .TIM0_clk   = GPT_CLK_PRESCALER_8,
     .TIM0_out   = GPT_OUT_DISCONNECTED,
     /* Timer 1 */
     .TIM1_mode  = GPT_MODE_OFF,
