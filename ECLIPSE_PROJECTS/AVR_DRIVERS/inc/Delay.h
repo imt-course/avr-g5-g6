@@ -8,7 +8,7 @@
 #ifndef INC_DELAY_H_
 #define INC_DELAY_H_
 
-#define F_CPU 8000000UL
+#include "Fcpu.h"
 #include <util/delay.h>
 
 #endif /* INC_DELAY_H_ */

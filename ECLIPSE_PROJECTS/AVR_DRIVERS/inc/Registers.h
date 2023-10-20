@@ -74,8 +74,16 @@
 #define TIMSK		*((volatile u8*) 0x59)
 #define TIFR		*((volatile u8*) 0x58)
 
-/************* Timer Registers *************/
+/************* Watchdog Timer Registers *************/
 #define WDTCR		*((volatile u8*) 0x41)
+
+/************* Uart Registers *************/
+#define UDR         *((volatile u8*) 0x2C)
+#define UCSRA		*((volatile u8*) 0x2B)
+#define UCSRB		*((volatile u8*) 0x2A)
+#define UCSRC		*((volatile u8*) 0x40)
+#define UBRRL		*((volatile u8*) 0x29)
+#define UBRRH		*((volatile u8*) 0x40)
 
 
 #endif /* INC_REGISTERS_H_ */
