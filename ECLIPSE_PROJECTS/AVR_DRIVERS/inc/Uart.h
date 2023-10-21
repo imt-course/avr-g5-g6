@@ -25,6 +25,9 @@ void Uart_Transmit(u8 data);
 u8 Uart_Receive(void);
 void Uart_EnableInterrupt(Uart_InterruptSourceType source);
 void Uart_DisableInterrupt(Uart_InterruptSourceType source);
-void Uart_SetCallback(Uart_InterruptSourceType source, void (*callbackPtr)(void));
+void Uart_SetTransmitCallback(void (*callbackPtr)(void));
+void Uart_SetReceiveCallback(void (*callbackPtr)(u8 data));
+void Uart_SendNumber(s64 number);
+void Uart_Print (char* str, ...);
 
 #endif /* INC_UART_H_ */

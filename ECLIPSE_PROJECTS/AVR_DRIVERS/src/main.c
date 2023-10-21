@@ -22,15 +22,22 @@
 #include "Wdt.h"
 #include "Uart.h"
 
+void Uart_ReceiveHandler (u8 data)
+{
+    Uart_Transmit(data);
+}
 
 int main (void)
 {
-    u8 data;
     Uart_Init();
+    Uart_EnableInterrupt(UART_INT_SOURCE_RX);
+    Uart_SetReceiveCallback(Uart_ReceiveHandler);
+    Gie_Enable();
+    Uart_Print("Hello %d %c %f\n", 5, 65, 32.3); // Hello 5 a 32.30
+    Uart_Print("New line \n");
     while (1)
     {
-        data = Uart_Receive();
-        Uart_Transmit(data);
+
     }
     
 }

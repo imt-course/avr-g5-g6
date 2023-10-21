@@ -4,13 +4,34 @@
  *  Created on: Oct 20, 2023
  *      Author: ahmad
  */
+#include <stdarg.h>
 #include "StdTypes.h"
 #include "Macros.h"
 #include "Registers.h"
+#include "Interrupts.h"
 #include "Fcpu.h"
 #include "Dio.h"
 #include "Uart_Cfg.h"
 #include "Uart.h"
+
+static void (*Callback_UartReceive) (u8 data) = NULL_PTR;
+static void (*Callback_UartTransmit) (void) = NULL_PTR;
+
+ISR(VECTOR_UART_RX)
+{
+    if (NULL_PTR != Callback_UartReceive)
+    {
+        Callback_UartReceive(UDR);
+    }
+}
+
+ISR(VECTOR_UART_TX)
+{
+    if (NULL_PTR != Callback_UartTransmit)
+    {
+        Callback_UartTransmit();
+    }
+}
 
 void Uart_Init(void)
 {
@@ -169,4 +190,93 @@ void Uart_DisableInterrupt(Uart_InterruptSourceType source)
     }
 }
 
-void Uart_SetCallback(Uart_InterruptSourceType source, void (*callbackPtr)(void));
+void Uart_SetTransmitCallback(void (*callbackPtr)(void))
+{
+    Callback_UartTransmit = callbackPtr;
+}
+void Uart_SetReceiveCallback(void (*callbackPtr)(u8 data))
+{
+    Callback_UartReceive = callbackPtr;
+}
+
+void Uart_SendNumber(s64 number)
+{
+    u32 reversed = 0;
+    u8 digitsCounter = 0;
+    if (number < 0)
+    {
+        Uart_Transmit('-');
+        number *= -1;
+    }
+
+    do
+    {
+        digitsCounter++;
+        reversed = (reversed*10) + (number%10);
+        number /= 10;
+    } while (number != 0);
+
+    while (digitsCounter > 0)
+    {
+        Uart_Transmit(reversed%10 + '0');
+        reversed /= 10;
+        digitsCounter--;
+    }
+}
+
+void Uart_Print (char* str, ...)
+{
+    va_list var_list;
+    va_start(var_list, str);
+    while(*str != 0)
+    {
+        if (*str == '%')
+        {
+            f64 number;
+            u64 temp;
+            str++;
+            switch (*str)
+            {
+            case 'd':
+                Uart_SendNumber(va_arg(var_list, int));
+                break;
+            case 'c':
+                Uart_Transmit((char)va_arg(var_list, int));
+                break;
+            case 'l':
+                if (*(str+1) == 'd')
+                {
+                    Uart_SendNumber(va_arg(var_list, long int));
+                    str++;
+                }
+                break;
+            case 'u':
+                if (*(str+1) == 'l')
+                {
+                    Uart_SendNumber(va_arg(var_list, unsigned long int));
+                    str++;
+                }
+                else
+                {
+                    Uart_SendNumber(va_arg(var_list, unsigned int));
+                }
+                break;
+            case 'f':
+                number = va_arg(var_list, double);
+                temp = (int)number;
+                Uart_SendNumber(temp);
+                Uart_Transmit('.');
+                number -= temp;
+                Uart_SendNumber((int)(number*100));
+                break;
+            default:
+                break;
+            }
+        }
+        else
+        {
+            Uart_Transmit(*str);
+        }
+        str++;
+    }
+}

@@ -23,5 +23,8 @@ void vector (void)
 #define VECTOR_TIM0_COMP    __vector_10
 #define VECTOR_TIM0_OVF     __vector_11
 #define VECTOR_ADC          __vector_16
+#define VECTOR_UART_RX      __vector_13
+#define VECTOR_UART_REG_EMP __vector_14
+#define VECTOR_UART_TX      __vector_15
 
 #endif /* INC_INTERRUPTS_H_ */
