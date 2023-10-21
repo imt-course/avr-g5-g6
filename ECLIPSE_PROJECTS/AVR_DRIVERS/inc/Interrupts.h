@@ -26,5 +26,6 @@ void vector (void)
 #define VECTOR_UART_RX      __vector_13
 #define VECTOR_UART_REG_EMP __vector_14
 #define VECTOR_UART_TX      __vector_15
+#define VECTOR_SPI          __vector_12
 
 #endif /* INC_INTERRUPTS_H_ */

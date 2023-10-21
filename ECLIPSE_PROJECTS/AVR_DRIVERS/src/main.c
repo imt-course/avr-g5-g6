@@ -21,8 +21,34 @@
 #include "Icu.h"
 #include "Wdt.h"
 #include "Uart.h"
+#include "Spi.h"
+
+#include "Spi_Cfg.h"
+#if (SPI_CFG_MODE == SPI_MASTER)
 
 void Uart_ReceiveHandler (u8 data)
+{
+    Uart_Transmit(data);
+    (void)Spi_Transfer(data);
+}
+
+int main (void)
+{
+    Uart_Init();
+    Spi_Init();
+    Uart_EnableInterrupt(UART_INT_SOURCE_RX);
+    Uart_SetReceiveCallback(Uart_ReceiveHandler);
+    Gie_Enable();
+    while (1)
+    {
+
+    }
+}
+
+
+#elif (SPI_CFG_MODE == SPI_SLAVE)
+
+void Spi_ReceiveHandler (u8 data)
 {
     Uart_Transmit(data);
 }
@@ -30,14 +56,14 @@ void Uart_ReceiveHandler (u8 data)
 int main (void)
 {
     Uart_Init();
-    Uart_EnableInterrupt(UART_INT_SOURCE_RX);
-    Uart_SetReceiveCallback(Uart_ReceiveHandler);
+    Spi_Init();
+    Spi_EnableInterrupt();
+    Spi_SetCallback(Spi_ReceiveHandler);
     Gie_Enable();
-    Uart_Print("Hello %d %c %f\n", 5, 65, 32.3); // Hello 5 a 32.30
-    Uart_Print("New line \n");
     while (1)
     {
 
     }
-    
 }
+
+#endif
