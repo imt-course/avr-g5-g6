@@ -46,7 +46,7 @@ void Task_Led1(void *pvParameters)
 
 void Task_Led2(void *pvParameters)
 {
-    vTaskDelay(1000);
+    //vTaskDelay(1000);
     Dio_SetPinMode(APP_PIN_LED2, DIO_MODE_OUTPUT);
     while (1)
     {
@@ -74,7 +74,7 @@ void Task1(void *pvParameters)
 {
     while (1)
     {
-        Uart_SendString("IAMTASK1 ");
+        Uart_SendString("IAMTASK1\r\n");
         vTaskDelay(2000);
     }
 }
@@ -84,7 +84,7 @@ void Task2(void *pvParameters)
     vTaskDelay(1000);
     while (1)
     {
-        Uart_SendString("IAMTASK2 ");
+        Uart_SendString("IAMTASK2\r\n");
         vTaskDelay(2000);
     }
 }
@@ -97,7 +97,6 @@ void Task1(void *pvParameters);
 void Task2(void *pvParameters);
 
 xSemaphoreHandle UartSem;
-
 int main(void)
 {
     Uart_Init();
@@ -111,7 +110,7 @@ void Task1(void *pvParameters)
 {
     while (1)
     {
-        if (xSemaphoreTake(UartSem, 100) == pdTRUE) {
+        if (xSemaphoreTake(UartSem, 3000) == pdTRUE) {
             Uart_SendString("IAMTASK1 ");
             xSemaphoreGive(UartSem);
         }
@@ -155,7 +154,7 @@ void ReceiveTask(void *pvParameters)
     {
         xSemaphoreTake(ReceiveSem, portMAX_DELAY);
         Uart_Transmit(receivedMessage);
-        vTaskDelay(500);
+        //vTaskDelay(500);
     }
 }
 
@@ -230,13 +229,13 @@ void ReceiveTask(void *pvParameters)
     {
         xQueueReceive(buffer, &message, portMAX_DELAY);
         Uart_Transmit(message);
-        vTaskDelay(300);
+        //vTaskDelay(300);
     }
 }
 
 void ReceiveISR(u8 data)
 {
-    xQueueSend(buffer, &data, portMAX_DELAY);
+    xQueueSend(buffer, &data, 100);
 }
 
 #endif
